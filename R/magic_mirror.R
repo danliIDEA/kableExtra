@@ -55,8 +55,8 @@ magic_mirror_latex <- function(kable_input){
   kable_info$begin_tabular <- paste0("\\\\begin\\{", kable_info$tabular, "\\}",
                                      kable_info$valign2)
   kable_info$end_tabular <- paste0("\\\\end\\{", kable_info$tabular, "\\}")
-  # N of columns
-  kable_info$ncol <- nchar(kable_info$align)
+  # N of columns (buggy)
+  # kable_info$ncol <- nchar(kable_info$align)
   # Caption
   if (str_detect(kable_input, "caption\\[")) {
     caption_line <- str_match(kable_input, "\\\\caption(.*)\\n")[2]
@@ -88,6 +88,8 @@ magic_mirror_latex <- function(kable_input){
   }
   kable_info$nrow <- length(kable_info$contents)
   kable_info$duplicated_rows <- (sum(duplicated(kable_info$contents)) != 0)
+  # N of columns (count &)
+  kable_info$ncol <- str_count(kable_info$contents[1], "&") + 1
   # Column names
   if (kable_info$booktabs & !grepl("\\\\midrule", kable_input)) {
     kable_info$colnames <- NULL
